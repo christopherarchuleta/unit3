@@ -1,0 +1,138 @@
+body {
+  background-color: black;
+}
+
+/*Title*/
+h1 {
+  text-align: center;
+  font-size: 24px;
+  font-family: "Palatino Linotype","Book Antiqua",Palatino,serif;
+  color: #fff7bc;
+  text-shadow: 1px 1px 2px gray;
+}
+
+/*Subtitle*/
+h2 {
+  text-align: center;
+  font-size: 20px;
+  font-family: "Palatino Linotype","Book Antiqua",Palatino,serif;
+  color: #d8b365;
+  text-shadow: 1px 1px 2px #5ab4ac;
+}
+
+#testdiv  {
+  color: #fff328;
+}
+
+/*Set height and width of map document in 'mapid' div*/
+#mapid {
+  height: 450px;
+  width: 800px;
+}
+
+/*Change popup content for proportional symbol map*/
+/*Decrease margins and line height for a tighter popup*/
+.leaflet-popup-content {
+  margin: 5px 10px;
+  line-height: 0.7;
+  background-color: #fff7bc;
+  opacity: 0.9;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background-color: #fff7bc;
+  opacity: 0.9;
+}
+
+/*Make popup appear near symbol*/
+.leaflet-popup {
+  position: absolute;
+}
+
+/*Change color of close button and hover color*/
+.leaflet-container a.leaflet-popup-close-button {
+  color: #b8564f;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: #ff2617;
+}
+
+/*Allocate interface footprint for slider widget*/
+#map {
+    height: 400px;
+    width: 80%;
+    display: inline-block;
+}
+
+#panel {
+    width: 16%;
+    padding: 20px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    line-height: 42px;
+}
+
+/*This is where the step buttons and slider bar are at*/
+.sequence-control-container {
+  width: 300px;
+  height: 30px;
+  background-color: rgba(251,255,254,0.9);
+  padding: 10px;
+  line-height: 45px;
+  text-align: center;
+  border: solid gray 1px;
+}
+
+/*Make the legend text normal*/
+#attribute-legend {
+  font-weight: normal;
+}
+
+/*This is where the temporal and attribute legend are located*/
+.legend-control-container {
+  width: 180px;
+  height: 140px;
+  background-color: rgba(251,255,254,0.9);
+  font-family: "Palatino Linotype","Book Antiqua",Palatino,serif;
+  font-size: 10pt;
+  font-weight: bold;
+  text-align: center;
+  border: solid gray 1px;
+}
+
+
+#temporal-legend {
+  width: 160px;
+  /*To make the text aligned*/
+  padding-left: 10px;
+}
+
+.range-slider {
+  width: 200px;
+}
+
+.step {
+  width: 40px;
+  height: 25px;
+  background-color: white;
+}
+
+.step img {
+  width: 100%;
+  height: auto;
+  background-color: white;
+}
+
+/*Specify increment movements*/
+#forward {
+    float: right;
+}
+
+#reverse {
+    float: left;
+}
+
+/*Written by Chris Archuleta, 2020*/
