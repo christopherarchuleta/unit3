@@ -65,14 +65,23 @@ function setMap(){
     var gratBackground = map.append("path")
       .datum(graticule.outline())
       .attr("class", "gratBackground")
-      .attr("d", path)
+      .attr("d", path);
 
-    // Add graticule to map
-    var gratlines = map.selectAll(".gratlines")
+      // Add graticule to map
+    var gratLines = map.selectAll(".gratLines")
       // graticule.lines binds the graticule to the selected elements
       .data(graticule.lines())
+      .enter()
       .append("path")
-      .attr("class", "gratlines")
+      .attr("class", "gratLines")
       .attr("d", path);
+
+    // Add geographies to map
+    var mapStates = map.append("path")
+      .datum(statesGeoJson)
+      .attr("class", "mapStates")
+      .attr("d", path);
+
+
   };
 };
