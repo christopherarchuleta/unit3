@@ -20,11 +20,11 @@ function setMap(){
     // Special generator method called a projection method
     var projection = d3.geoAlbers()
       // Center of developable surface, not the reference globe
-      .center([0, 0])
+      .center([0, 25])
       // Rotation of reference globe
-      .rotate([97, -40, 0])
+      .rotate([97, -17, 0])
       .parallels([35.5, 41])
-      .scale(730)
+      .scale(800)
       // Translate the map to keep it centered in the svg
       .translate([width / 2, height / 2]);
 
@@ -56,5 +56,23 @@ function setMap(){
       .attr("class", "mapStates")
       .attr("d", path);
     console.log(mapStates);
+
+    // Graticule generator
+    var graticule = d3.geoGraticule()
+      .step([5, 5]);
+
+    // Graticule background create for contrasting color
+    var gratBackground = map.append("path")
+      .datum(graticule.outline())
+      .attr("class", "gratBackground")
+      .attr("d", path)
+
+    // Add graticule to map
+    var gratlines = map.selectAll(".gratlines")
+      // graticule.lines binds the graticule to the selected elements
+      .data(graticule.lines())
+      .append("path")
+      .attr("class", "gratlines")
+      .attr("d", path);
   };
 };

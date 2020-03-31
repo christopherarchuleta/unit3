@@ -30,6 +30,22 @@ h2 {
   width: 800px;
 }
 
+/* Stylize the map */
+.map {
+  border: medium solid #999;
+}
+
+/* Style choropleth map */
+.mapStates {
+  fill: #ffffff;
+  stroke: #CCC;
+  stroke-width: 2px;
+}
+
+/* Symbolize water with graticule background */
+.gratBackground {
+  fill: #D5E3FF;
+}
 /* Stylize the bubblechart
 independently of the data (static)*/
 .axis path,
