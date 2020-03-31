@@ -3,11 +3,40 @@ window.onload = setMap();
 
 // Set up choropleth map
 function setMap(){
+
+  //Map frame projections
+  var width = 960,
+      height = 460;
+
+    // SVG container for map
+    var map = d3.select("body")
+      // Append svg to the body in index.html
+      .append("svg")
+      .attr("class", "map")
+      .attr("width", width)
+      .attr("height", height);
+
+    // Create Albers equal-area projection for continental US
+    // Special generator method called a projection method
+    var projection = d3.geoAlbers()
+      // Center of developable surface, not the reference globe
+      .center([0, 0])
+      // Rotation of reference globe
+      .rotate([97, -40, 0])
+      .parallels([35.5, 41])
+      .scale(730)
+      // Translate the map to keep it centered in the svg
+      .translate([width / 2, height / 2]);
+
+    // Path generator held within "path" variable
+    var path = d3.geoPath()
+      .projection(projection);
+
   // Promise.all waits for the last dataset to load to callback all of the datasets
-  var promises = [d3.csv("data/VoteTurn_Eric_Duffin_Statista_2_3 3_17_CDC_3_24.csv"),
-                  d3.json("data/StateCovid19Vote.topojson")
-                  // The above methods are AJAX methods
-                ];
+  var promises = [];
+  promises.push(d3.csv("data/VoteTurn_Eric_Duffin_Statista_2_3 3_17_CDC_3_24.csv"));
+  promises.push(d3.json("data/StateCovid19Vote.topojson"));
+  // The above methods are AJAX methods
   Promise.all(promises).then(callback);
 
   // Callback function
@@ -21,6 +50,11 @@ function setMap(){
     // Parameters: TopoJSON feature, object with dataset's details
     var statesGeoJson = topojson.feature(states, states.objects.StateCovid19Vote);
 
-    console.log(statesGeoJson);
+    // Add geographies to map
+    var mapStates = map.append("path")
+      .datum(statesGeoJson)
+      .attr("class", "mapStates")
+      .attr("d", path);
+    console.log(mapStates);
   };
 };
