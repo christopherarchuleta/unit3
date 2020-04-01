@@ -20,11 +20,11 @@ function setMap(){
     // Special generator method called a projection method
     var projection = d3.geoAlbers()
       // Center of developable surface, not the reference globe
-      .center([0, 25])
+      .center([0, 22])
       // Rotation of reference globe
       .rotate([97, -17, 0])
       .parallels([35.5, 41])
-      .scale(800)
+      .scale(930)
       // Translate the map to keep it centered in the svg
       .translate([width / 2, height / 2]);
 
@@ -36,6 +36,9 @@ function setMap(){
   var promises = [];
   promises.push(d3.csv("data/VoteTurn_Eric_Duffin_Statista_2_3 3_17_CDC_3_24.csv"));
   promises.push(d3.json("data/StateCovid19Vote.topojson"));
+  promises.push(d3.json("data/GreatLakes.topojson"));
+  promises.push(d3.json("data/countries.topojson"));
+  promises.push(d3.json("data/usstates.topojson"));
   // The above methods are AJAX methods
   Promise.all(promises).then(callback);
 
@@ -43,19 +46,17 @@ function setMap(){
   function callback(data){
     csvData = data[0];
     states = data[1];
-    console.log(csvData);
-    console.log(states);
+    lakes = data[2];
+    nations = data[3];
+    allStates = data[4];
+
 
     // Translate TopoJSON to GEOJSON for compatibility with D3
     // Parameters: TopoJSON feature, object with dataset's details
     var statesGeoJson = topojson.feature(states, states.objects.StateCovid19Vote);
-
-    // Add geographies to map
-    var mapStates = map.append("path")
-      .datum(statesGeoJson)
-      .attr("class", "mapStates")
-      .attr("d", path);
-    console.log(mapStates);
+    var lakesGeoJson = topojson.feature(lakes, lakes.objects.GreatLakes);
+    var nationsGeoJson = topojson.feature(nations, nations.objects.countries);
+    var allStatesGeoJson = topojson.feature(allStates, allStates.objects.usstates);
 
     // Graticule generator
     var graticule = d3.geoGraticule()
@@ -76,11 +77,30 @@ function setMap(){
       .attr("class", "gratLines")
       .attr("d", path);
 
+
+
     // Add geographies to map
+    var mapNations = map.append("path")
+      .datum(nationsGeoJson)
+      .attr("class", "mapNations")
+      .attr("d", path);
+
+    var mapAllStates = map.append("path")
+      .datum(allStatesGeoJson)
+      .attr("class", "mapAllStates")
+      .attr("d", path);
+
     var mapStates = map.append("path")
       .datum(statesGeoJson)
       .attr("class", "mapStates")
       .attr("d", path);
+
+    var mapLakes = map.append("path")
+      .datum(lakesGeoJson)
+      .attr("class", "mapLakes")
+      .attr("d", path);
+
+
 
 
   };

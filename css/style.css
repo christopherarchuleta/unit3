@@ -36,11 +36,29 @@ h2 {
 }
 
 /* Style choropleth map */
-.mapStates {
+.mapAllStates {
   fill: #ffffff;
   stroke: #CCC;
-  stroke-width: 2px;
+  stroke-width: 1px;
 }
+
+.mapStates {
+  fill: #cccccc;
+  stroke: #636363;
+  stroke-width: 0.5px;
+}
+
+.mapNations {
+  fill: #f7f7f7;
+  stroke: #CCC;
+  stroke-width: 1.5px;
+}
+
+.mapLakes {
+  fill: #bdd7e7;
+}
+
+
 
 .gratLines {
   fill: none;
