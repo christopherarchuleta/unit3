@@ -58,6 +58,38 @@ function setMap(){
     var nationsGeoJson = topojson.feature(nations, nations.objects.countries);
     var allStatesGeoJson = topojson.feature(allStates, allStates.objects.usstates);
 
+    // Variables for data join
+    var attrArray = ["varA", "varB", "varC", "varD", "varE"];
+
+    // Assign CSV attributes to GeoJSON with each loop
+    for (var i=0; i<csvData.length; i++){
+      // Index EAs
+      var csvRegion = csvData[i];
+      // "name" is the joining field
+      var csvKey = csvRegion.name;
+
+      // Loop through GeoJson EAs to find correct one
+      for (var a=0; a<statesGeoJson.features.length; a++){
+
+        // Properties of current EA
+        var geojsonProps = statesGeoJson.features[a].properties;
+        var geojsonKey = geojsonProps.name;
+
+        // Conditional statement to transfer csv data when names match
+        if (geojsonKey == csvKey){
+          // When the condition is met, assign all attributes and values
+          attrArray.forEach(function(attr){
+            // Make variable equal to csv value
+            var val = parseFloat(csvRegion[attr]);
+            console.log(csvRegion);
+            console.log(val);
+            // Assign value to GeoJSON
+            geojsonProps[attr] = val;
+          });
+        };
+      };
+    };
+
     // Graticule generator
     var graticule = d3.geoGraticule()
       .step([5, 5]);
@@ -83,7 +115,10 @@ function setMap(){
     var mapNations = map.append("path")
       .datum(nationsGeoJson)
       .attr("class", "mapNations")
-      .attr("d", path);
+      .attr("d", path)
+      console.log(csvData)
+      console.log(statesGeoJson)
+      // console.log(attrArray);
 
     var mapAllStates = map.append("path")
       .datum(allStatesGeoJson)
