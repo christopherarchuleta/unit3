@@ -66,7 +66,7 @@ function setMap(){
     var gratBackground = map.append("path")
       .datum(graticule.outline())
       .attr("class", "gratBackground")
-      .attr("d", path);
+      .attr("d", path)
 
       // Add graticule to map
     var gratLines = map.selectAll(".gratLines")
