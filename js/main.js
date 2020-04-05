@@ -58,8 +58,8 @@ function setMap(){
     var nationsGeoJson = topojson.feature(nations, nations.objects.countries);
     var allStatesGeoJson = topojson.feature(allStates, allStates.objects.usstates);
 
-    // Variables for data join
-    var attrArray = ["varA", "varB", "varC", "varD", "varE"];
+    // Variables for data join from csv
+    var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
 
     // Assign CSV attributes to GeoJSON with each loop
     for (var i=0; i<csvData.length; i++){
@@ -81,8 +81,6 @@ function setMap(){
           attrArray.forEach(function(attr){
             // Make variable equal to csv value
             var val = parseFloat(csvRegion[attr]);
-            console.log(csvRegion);
-            console.log(val);
             // Assign value to GeoJSON
             geojsonProps[attr] = val;
           });
