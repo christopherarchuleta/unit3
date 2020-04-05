@@ -64,23 +64,19 @@
       var nationsGeoJson = topojson.feature(nations, nations.objects.countries);
       var allStatesGeoJson = topojson.feature(allStates, allStates.objects.usstates);
 
-
       // Join csv data to GeoJSON EAs
       statesGeoJson = joinData(statesGeoJson, csvData);
 
-      var rows = csvData.split('\n');
-      console.log(rows);
 
       // Set color scale
-      var colorScale = makeColorScale(csvData[4]);
-      console.log(csvData);
+      // var colorScale = makeColorScale(data);
 
       // Add geographies to map
       var mapNations = map.append("path")
         .datum(nationsGeoJson)
         .attr("class", "mapNations")
         .attr("d", path)
-        console.log(csvData)
+        console.log((Object.values(csvData[0]))[4])
         console.log(statesGeoJson)
 
       var mapAllStates = map.append("path")
@@ -161,7 +157,7 @@
       };
 
       // Color scale generator function
-      function makeColorScale(data){
+      function makeColorScale(csvData){
         var colorClasses = [
           "#d4b9da",
           "#c994c7",
@@ -180,8 +176,8 @@
         // use the minimum and maximum data values as the
         // extrema of the new range
         var minmax = [
-          d3.min(data, function(d) { return parseFloat(d[expressed]); }),
-          d3.max(data, function(d) { return parseFloat(d[expressed]); })
+          d3.min(csvData, function(d) { return parseFloat(d[expressed]); }),
+          d3.max(csvData, function(d) { return parseFloat(d[expressed]); })
         ];
         colorScale.domain(minmax);
         console.log(colorScale.quantiles());
