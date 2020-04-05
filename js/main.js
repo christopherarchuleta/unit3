@@ -53,6 +53,11 @@
       nations = data[3];
       allStates = data[4];
 
+      // Make array for number of cases by EA
+      var caseData = [];
+
+      getData(csvData);
+
       // Place graticule on the map
       setGraticule(map, path);
 
@@ -76,8 +81,8 @@
         .datum(nationsGeoJson)
         .attr("class", "mapNations")
         .attr("d", path)
-        console.log((Object.values(csvData[0]))[4])
-        console.log(statesGeoJson)
+        console.log(csvData)
+        console.log(statesGeoJson);
 
       var mapAllStates = map.append("path")
         .datum(allStatesGeoJson)
@@ -93,6 +98,22 @@
     };
   };
 
+      // Function to get relevant data for color ramp
+      function getData(csvData){
+        var csvObject = Object.values(csvData);
+        console.log(csvObject[0]);
+
+
+
+        for (var i=0; i<csvObject.length; i++){
+          var stateObject = Object.values(csvObject[i]);
+          console.log(typeof(stateObject[4])qq);
+          // console.log((Object.values(stateObject))[i]);
+          // if (typeof(stateObject[i]) == "COVID Cases Mar24"){
+          //   console.log("Success");
+          // };
+        };
+      };
 
       function setGraticule(map, path){
             // Graticule generator
