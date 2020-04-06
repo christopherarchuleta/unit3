@@ -56,7 +56,7 @@
       // Make array for number of cases by EA
       var caseData = [];
 
-      getData(csvData);
+      getData(csvData, caseData);
 
       // Place graticule on the map
       setGraticule(map, path);
@@ -99,7 +99,7 @@
   };
 
       // Function to get relevant data for color ramp
-      function getData(csvData){
+      function getData(csvData, caseData){
         var csvObject = Object.values(csvData);
         console.log(csvObject[0]);
 
@@ -107,11 +107,10 @@
 
         for (var i=0; i<csvObject.length; i++){
           var stateObject = Object.values(csvObject[i]);
-          console.log(typeof(stateObject[4])qq);
-          // console.log((Object.values(stateObject))[i]);
-          // if (typeof(stateObject[i]) == "COVID Cases Mar24"){
-          //   console.log("Success");
-          // };
+          if ((stateObject[4]) !== "COVID Cases Mar24"){
+            caseData.push(stateObject[4]);
+          };
+          console.log(caseData);
         };
       };
 
