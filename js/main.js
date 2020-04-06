@@ -9,6 +9,7 @@
 
   var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
   var expressed = attrArray[2];
+  var colorScale;
 
   // Set up choropleth map
   function setMap(){
@@ -69,7 +70,7 @@
 
       // Translate TopoJSON to GEOJSON for compatibility with D3
       // Parameters: TopoJSON feature, object with dataset's details
-      var statesGeoJson = topojson.feature(states, states.objects.StateCovid19Vote);
+      var statesGeoJson = topojson.feature(states, states.objects.StateCovid19Vote).features;
       var lakesGeoJson = topojson.feature(lakes, lakes.objects.GreatLakes);
       var nationsGeoJson = topojson.feature(nations, nations.objects.countries);
       var allStatesGeoJson = topojson.feature(allStates, allStates.objects.usstates);
@@ -77,9 +78,8 @@
       // Join csv data to GeoJSON EAs
       statesGeoJson = joinData(statesGeoJson, csvData);
 
-      console.log(csvData);
       // Set color scale
-      var colorScale = makeColorScale(csvData);
+      colorScale = makeColorScale(csvData);
 
       // Add geographies to map
       var mapNations = map.append("path")
@@ -93,7 +93,7 @@
         .attr("class", "mapAllStates")
         .attr("d", path);
 
-      setEnumerationUnits(statesGeoJson, map, path);
+      setEnumerationUnits(statesGeoJson, map, path, colorScale);
 
       var mapLakes = map.append("path")
         .datum(lakesGeoJson)
@@ -138,6 +138,37 @@
             };
 
 
+
+
+
+            // function joinData(franceRegions,csvData){
+            // 		//loop through csv to assign each set of csv attribute values to geojson region
+            // 	        for (var i=0; i<csvData.length; i++){
+            // 	            var csvRegion = csvData[i]; //the current region
+            // 	            var csvKey = csvRegion.adm1_code; //the CSV primary key
+            //
+            // 	            //loop through geojson regions to find correct region
+            // 	            for (var a=0; a<franceRegions.length; a++){
+            //
+            // 	                var geojsonProps = franceRegions[a].properties; //the current region geojson properties
+            // 	                var geojsonKey = geojsonProps.adm1_code; //the geojson primary key
+            //
+            // 	                //where primary keys match, transfer csv data to geojson properties object
+            // 	                if (geojsonKey == csvKey){
+            //
+            // 	                    //assign all attributes and values
+            // 	                    attrArray.forEach(function(attr){
+            // 	                        var val = parseFloat(csvRegion[attr]); //get csv attribute value
+            // 	                        geojsonProps[attr] = val; //assign attribute and value to geojson properties
+            // 	                    });
+            // 	                };
+            // 	            };
+            // 	        };
+            // 	        return franceRegions;
+            // 	}
+
+
+
       function joinData(statesGeoJson, csvData){
         // Variables for data join from csv
         var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
@@ -151,10 +182,12 @@
           var csvKey = csvRegion.name;
 
           // Loop through GeoJson EAs to find correct one
-          for (var a=0; a<statesGeoJson.features.length; a++){
+          for (var a=0; a<statesGeoJson.length; a++){
 
             // Properties of current EA
-            var geojsonProps = statesGeoJson.features[a].properties;
+            var geojsonProps = statesGeoJson[a].properties;
+            console.log(geojsonProps);
+            console.log(statesGeoJson);
             var geojsonKey = geojsonProps.name;
 
             // Conditional statement to transfer csv data when names match
@@ -172,11 +205,37 @@
         return statesGeoJson;
       };
 
-      function setEnumerationUnits(statesGeoJson, map, path){
-        var mapStates = map.append("path")
-          .datum(statesGeoJson)
-          .attr("class", "mapStates")
-          .attr("d", path);
+      function setEnumerationUnits(statesGeoJson, map, path, colorScale){
+        // Select all to individualize states
+        console.log("hi");
+        console.log(statesGeoJson);
+        var mapStates = map.selectAll(".mapStates")
+          .data(statesGeoJson)
+          .enter()
+          .append("path")
+          // Assign a unique class to each region based on joined data
+          .attr("class", function(d){
+            // Space after mapStates so that multiple
+            // styles can be added to HTML element
+            console.log(d);
+            return "mapStates " + d.properties.name;
+          })
+          .attr("d", path)
+          .style("fill", function(d){
+
+            var value = d.properties[expressed];
+            console.log('helo');
+            if(value) {
+            	return colorScale(d.properties[expressed]);
+            } else {
+            	return "#ccc";
+            }
+          // .style("fill", function(d){
+          //   console.log(d.properties[expressed]);
+          //   console.log(d);
+          //   return colorScale(d.properties[expressed]);
+          });
+
       };
 
       // Color scale generator function
