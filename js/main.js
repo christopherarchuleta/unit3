@@ -1,8 +1,14 @@
+// Javascript by Christopher Archuleta, 2020
+
 // Self-executing anonymous function that holds
 // everything to avoid global variables
 (function(){
   // Begin script when data loads
   window.onload = setMap();
+
+
+  var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
+  var expressed = attrArray[2];
 
   // Set up choropleth map
   function setMap(){
@@ -54,9 +60,8 @@
       allStates = data[4];
 
       // Make array for number of cases by EA
-      var caseData = [];
-
-      getData(csvData, caseData);
+      // var caseData = [];
+      // getData(csvData, caseData);
 
       // Place graticule on the map
       setGraticule(map, path);
@@ -72,17 +77,16 @@
       // Join csv data to GeoJSON EAs
       statesGeoJson = joinData(statesGeoJson, csvData);
 
-
+      console.log(csvData);
       // Set color scale
-      // var colorScale = makeColorScale(data);
+      var colorScale = makeColorScale(csvData);
 
       // Add geographies to map
       var mapNations = map.append("path")
         .datum(nationsGeoJson)
         .attr("class", "mapNations")
         .attr("d", path)
-        console.log(csvData)
-        console.log(statesGeoJson);
+
 
       var mapAllStates = map.append("path")
         .datum(allStatesGeoJson)
@@ -98,21 +102,19 @@
     };
   };
 
-      // Function to get relevant data for color ramp
-      function getData(csvData, caseData){
-        var csvObject = Object.values(csvData);
-        console.log(csvObject[0]);
-
-
-
-        for (var i=0; i<csvObject.length; i++){
-          var stateObject = Object.values(csvObject[i]);
-          if ((stateObject[4]) !== "COVID Cases Mar24"){
-            caseData.push(stateObject[4]);
-          };
-          console.log(caseData);
-        };
-      };
+      // // Function to get relevant data for color ramp
+      // function getData(csvData, caseData){
+      //   // Object.values accesses parts of a JS object
+      //   var csvObject = Object.values(csvData);
+      //   // Loop to add number of cases to array for color range
+      //   for (var i=0; i<csvObject.length; i++){
+      //     var stateObject = Object.values(csvObject[i]);
+      //     if ((stateObject[4]) !== "COVID Cases Mar24"){
+      //       caseData.push(stateObject[4]);
+      //     };
+      //     console.log(caseData);
+      //   };
+      // };
 
       function setGraticule(map, path){
             // Graticule generator
@@ -139,6 +141,7 @@
       function joinData(statesGeoJson, csvData){
         // Variables for data join from csv
         var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
+        // var expressed = attrArray[2];
 
         // Assign CSV attributes to GeoJSON with each loop
         for (var i=0; i<csvData.length; i++){
