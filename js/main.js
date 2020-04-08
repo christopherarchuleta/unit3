@@ -237,8 +237,15 @@
 
       // Creates bar chart (coordinated visualization)
       function setChart(csvData, colorScale){
-        var chartWidth = window.innerWidth * 0.425;
-        chartHeight = 460;
+        var chartWidth = window.innerWidth * 0.425,
+          chartHeight = 473,
+          leftPadding = 25,
+          rightPadding = 3,
+          topBottomPadding = 5,
+          chartInnerWidth = chartWidth - leftPadding - rightPadding,
+          chartInnerHeight = chartHeight - topBottomPadding * 2,
+          translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
+
 
         // Creates svg element that holds bar chart
         var chart = d3.select("body")
@@ -247,12 +254,20 @@
           .attr("height", chartHeight)
           .attr("class", "chart");
 
+        var chartBackground = chart.append("rect")
+          .attr("class", "chartBackground")
+          .attr("width", chartInnerWidth)
+          .attr("height", chartInnerHeight)
+          .attr("transform", translate);
+
+
+
 
         // Vertical scaling of bars relative to frame
         var yScale = d3.scaleLinear()
-          .range([0, chartHeight])
-          .domain([0, 105])
-          console.log(yScale);
+          .range([chartHeight, 0])
+          .domain([0, 100]);
+
 
         // Set bars for each state
         var bars = chart.selectAll(".bars")
@@ -261,7 +276,7 @@
           .append("rect")
           // Sort compares successive values to display them in order
           .sort(function(a, b){
-            return a[expressed]-b[expressed]
+            return b[expressed]-a[expressed]
           })
           .attr("class", function(d){
             return "bars " + d.name;
@@ -271,16 +286,42 @@
           // n/1 - 1 allows for spaces between them
           .attr("width", chartWidth / csvData.length - 1)
           .attr("x", function(d, i){
-            return i * (chartWidth / csvData.length);
+            return i * (chartInnerWidth / csvData.length) + leftPadding;
           })
-          .attr("height", function(d){
-            return yScale(parseFloat(d[expressed]));
-          })
-          .attr("y", function(d){
+          .attr("height", function(d, i){
             return chartHeight - yScale(parseFloat(d[expressed]));
+          })
+          .attr("y", function(d, i){
+            return yScale(parseFloat(d[expressed])) + topBottomPadding;
           })
           .style("fill", function(d){
             return colorScale(d[expressed]);
+          });
+
+
+
+        var chartTitle = chart.append("text")
+          .attr("x", 40)
+          .attr("y", 40)
+          .attr("class", "chartTitle")
+          .text("COVID-19 Cases (Pct. of State Pop.)")
+        };
+
+        var yAxis = d3.axisLeft()
+            .scale(yScale);
+
+
+        var axis = chart.append("g")
+            .attr("class", "axis")
+            .attr("transform", translate)
+            .call(yAxis);
+
+        //create frame for chart border
+        var chartFrame = chart.append("rect")
+            .attr("class", "chartFrame")
+            .attr("width", chartInnerWidth)
+            .attr("height", chartInnerHeight)
+            .attr("transform", translate);
 
         // Append text to a block so the bars make sense to the user
         var numbers = chart.selectAll(".numbers")
@@ -297,6 +338,7 @@
           .attr("x", function (d, i){
             var fraction = chartWidth / csvData.length;
             return i * fraction + (fraction - 1) / 2;
+            console.log("Hello");
           })
           // Labels placed inside the bars
           .attr("y", function(d){
@@ -305,8 +347,8 @@
           .text(function(d){
             return d[expressed];
           });
-          });
-      };
+
+
 
 
 // End of wrapper function
