@@ -6,7 +6,7 @@
   // Begin script when data loads
   window.onload = setMap();
 
-
+  // var ss = {};
   var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
   var expressed = attrArray[3];
   var colorScale;
@@ -266,7 +266,8 @@
         // Vertical scaling of bars relative to frame
         var yScale = d3.scaleLinear()
           .range([chartHeight, 0])
-          .domain([0, 100]);
+          .domain([0, 0.03]);
+
 
 
         // Set bars for each state
@@ -304,11 +305,12 @@
           .attr("x", 40)
           .attr("y", 40)
           .attr("class", "chartTitle")
-          .text("COVID-19 Cases (Pct. of State Pop.)")
-        };
+          .text("COVID-19 Cases (Pct. of State Pop.)");
+
 
         var yAxis = d3.axisLeft()
             .scale(yScale);
+
 
 
         var axis = chart.append("g")
@@ -347,6 +349,7 @@
           .text(function(d){
             return d[expressed];
           });
+        };
 
 
 
