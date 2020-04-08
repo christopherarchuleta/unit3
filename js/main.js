@@ -8,14 +8,16 @@
 
 
   var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
-  var expressed = attrArray[2];
+  var expressed = attrArray[3];
   var colorScale;
 
   // Set up choropleth map
   function setMap(){
 
     //Map frame projections
-    var width = 960,
+    // The width includes code for responsive web design
+    // Width varies depending on the size of the browser window
+    var width = window.innerWidth * 0.5,
         height = 460;
 
       // SVG container for map
@@ -60,10 +62,6 @@
       nations = data[3];
       allStates = data[4];
 
-      // Make array for number of cases by EA
-      // var caseData = [];
-      // getData(csvData, caseData);
-
       // Place graticule on the map
       setGraticule(map, path);
 
@@ -99,22 +97,14 @@
         .datum(lakesGeoJson)
         .attr("class", "mapLakes")
         .attr("d", path);
+
+        // Add coordinated visualization to map
+        setChart(csvData, colorScale);
+
+
     };
   };
 
-      // // Function to get relevant data for color ramp
-      // function getData(csvData, caseData){
-      //   // Object.values accesses parts of a JS object
-      //   var csvObject = Object.values(csvData);
-      //   // Loop to add number of cases to array for color range
-      //   for (var i=0; i<csvObject.length; i++){
-      //     var stateObject = Object.values(csvObject[i]);
-      //     if ((stateObject[4]) !== "COVID Cases Mar24"){
-      //       caseData.push(stateObject[4]);
-      //     };
-      //     console.log(caseData);
-      //   };
-      // };
 
       function setGraticule(map, path){
             // Graticule generator
@@ -140,35 +130,6 @@
 
 
 
-
-            // function joinData(franceRegions,csvData){
-            // 		//loop through csv to assign each set of csv attribute values to geojson region
-            // 	        for (var i=0; i<csvData.length; i++){
-            // 	            var csvRegion = csvData[i]; //the current region
-            // 	            var csvKey = csvRegion.adm1_code; //the CSV primary key
-            //
-            // 	            //loop through geojson regions to find correct region
-            // 	            for (var a=0; a<franceRegions.length; a++){
-            //
-            // 	                var geojsonProps = franceRegions[a].properties; //the current region geojson properties
-            // 	                var geojsonKey = geojsonProps.adm1_code; //the geojson primary key
-            //
-            // 	                //where primary keys match, transfer csv data to geojson properties object
-            // 	                if (geojsonKey == csvKey){
-            //
-            // 	                    //assign all attributes and values
-            // 	                    attrArray.forEach(function(attr){
-            // 	                        var val = parseFloat(csvRegion[attr]); //get csv attribute value
-            // 	                        geojsonProps[attr] = val; //assign attribute and value to geojson properties
-            // 	                    });
-            // 	                };
-            // 	            };
-            // 	        };
-            // 	        return franceRegions;
-            // 	}
-
-
-
       function joinData(statesGeoJson, csvData){
         // Variables for data join from csv
         var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
@@ -186,8 +147,6 @@
 
             // Properties of current EA
             var geojsonProps = statesGeoJson[a].properties;
-            console.log(geojsonProps);
-            console.log(statesGeoJson);
             var geojsonKey = geojsonProps.name;
 
             // Conditional statement to transfer csv data when names match
@@ -207,8 +166,7 @@
 
       function setEnumerationUnits(statesGeoJson, map, path, colorScale){
         // Select all to individualize states
-        console.log("hi");
-        console.log(statesGeoJson);
+
         var mapStates = map.selectAll(".mapStates")
           .data(statesGeoJson)
           .enter()
@@ -217,23 +175,20 @@
           .attr("class", function(d){
             // Space after mapStates so that multiple
             // styles can be added to HTML element
-            console.log(d);
+
             return "mapStates " + d.properties.name;
           })
           .attr("d", path)
           .style("fill", function(d){
 
             var value = d.properties[expressed];
-            console.log('helo');
+
+            // Add color only if there is a value
             if(value) {
             	return colorScale(d.properties[expressed]);
             } else {
             	return "#ccc";
             }
-          // .style("fill", function(d){
-          //   console.log(d.properties[expressed]);
-          //   console.log(d);
-          //   return colorScale(d.properties[expressed]);
           });
 
       };
@@ -249,22 +204,108 @@
         ];
 
         // Color scale generator
-        // scaleQuantile stretched or compresses data
+        // scaleThreshold stretches or compresses data
         // into range of discrete values
-        var colorScale = d3.scaleQuantile()
+        var colorScale = d3.scaleThreshold()
           .range(colorClasses);
 
-        // To make an equal interval classification,
-        // use the minimum and maximum data values as the
-        // extrema of the new range
-        var minmax = [
-          d3.min(csvData, function(d) { return parseFloat(d[expressed]); }),
-          d3.max(csvData, function(d) { return parseFloat(d[expressed]); })
-        ];
-        colorScale.domain(minmax);
-        console.log(colorScale.quantiles());
+        // Array of all data values necessary for
+        // new values and clustering to work
+
+        var domainArray = [];
+          for (var i=0; i<csvData.length; i++){
+            var val = parseFloat(csvData[i][expressed]);
+            domainArray.push(val);
+          };
+
+          // To make a natural breaks classification,
+          // use an algorithm to optimize clustering
+
+          var clusters = ckmeans(domainArray, 5);
+          // Use cluster minimum to set breaks
+          domainArray = clusters.map(function(d){
+            return d3.min(d);
+          });
+          // Remove first value from domain array for logical breakpoints
+          domainArray.shift();
+
+        // Remaining cluster minmums become class breaks
+        colorScale.domain(domainArray);
 
         return colorScale;
+      };
+
+      // Creates bar chart (coordinated visualization)
+      function setChart(csvData, colorScale){
+        var chartWidth = window.innerWidth * 0.425;
+        chartHeight = 460;
+
+        // Creates svg element that holds bar chart
+        var chart = d3.select("body")
+          .append("svg")
+          .attr("width", chartWidth)
+          .attr("height", chartHeight)
+          .attr("class", "chart");
+
+
+        // Vertical scaling of bars relative to frame
+        var yScale = d3.scaleLinear()
+          .range([0, chartHeight])
+          .domain([0, 105])
+          console.log(yScale);
+
+        // Set bars for each state
+        var bars = chart.selectAll(".bars")
+          .data(csvData)
+          .enter()
+          .append("rect")
+          // Sort compares successive values to display them in order
+          .sort(function(a, b){
+            return a[expressed]-b[expressed]
+          })
+          .attr("class", function(d){
+            return "bars " + d.name;
+          })
+          // Size and position of rectangles based on index value
+          // Width of n/1 would result in adjacent bars
+          // n/1 - 1 allows for spaces between them
+          .attr("width", chartWidth / csvData.length - 1)
+          .attr("x", function(d, i){
+            return i * (chartWidth / csvData.length);
+          })
+          .attr("height", function(d){
+            return yScale(parseFloat(d[expressed]));
+          })
+          .attr("y", function(d){
+            return chartHeight - yScale(parseFloat(d[expressed]));
+          })
+          .style("fill", function(d){
+            return colorScale(d[expressed]);
+
+        // Append text to a block so the bars make sense to the user
+        var numbers = chart.selectAll(".numbers")
+          .data(csvData)
+          .enter()
+          .append("text")
+          .sort(function(a, b){
+            return a[expressed]-b[expressed]
+          })
+          .attr("class", function(d){
+            return "numbers " + d.name;
+          })
+          .attr("text-anchor", "middle")
+          .attr("x", function (d, i){
+            var fraction = chartWidth / csvData.length;
+            return i * fraction + (fraction - 1) / 2;
+          })
+          // Labels placed inside the bars
+          .attr("y", function(d){
+            return chartHeight - yScale(parseFloat(d[expressed])) + 15;
+          })
+          .text(function(d){
+            return d[expressed];
+          });
+          });
       };
 
 

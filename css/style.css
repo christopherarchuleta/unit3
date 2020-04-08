@@ -33,6 +33,19 @@ h2 {
 /* Stylize the map */
 .map {
   border: medium solid #999;
+  /* Margins set within space remaining after map and chart */
+  margin: 10px 0 0 20px;
+}
+
+.chart {
+  background-color: rgba(128, 128, 128, .2);
+  border: medium solid #999;
+  float: right;
+  margin: 10px 20px 0 0;
+}
+
+.numbers {
+  
 }
 
 /* Style choropleth map */
