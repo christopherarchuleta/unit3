@@ -19,13 +19,30 @@
 // Self-executing anonymous function that holds
 // everything to avoid global variables
 (function(){
-  // Begin script when data loads
-  window.onload = setMap();
-
+  // Pseudo-global variables
   // var ss = {};
   var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
   var expressed = attrArray[3];
   var colorScale;
+
+  // Chart dimensions
+  var chartWidth = window.innerWidth * 0.425,
+    chartHeight = 473,
+    leftPadding = 35,
+    rightPadding = 5,
+    topBottomPadding = 5,
+    chartInnerWidth = chartWidth - leftPadding - rightPadding,
+    chartInnerHeight = chartHeight - topBottomPadding * 2,
+    translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
+
+  // y-Scale of chart bars
+  var yScale;
+
+
+
+  // Begin script when data loads
+  window.onload = setMap();
+
 
   // Set up choropleth map
   function setMap(){
@@ -257,14 +274,6 @@
 
       // Creates bar chart (coordinated visualization)
       function setChart(csvData, colorScale){
-        var chartWidth = window.innerWidth * 0.425,
-          chartHeight = 473,
-          leftPadding = 35,
-          rightPadding = 5,
-          topBottomPadding = 5,
-          chartInnerWidth = chartWidth - leftPadding - rightPadding,
-          chartInnerHeight = chartHeight - topBottomPadding * 2,
-          translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
 
 
         // Creates svg element that holds bar chart
@@ -284,14 +293,19 @@
 
 
         // Vertical scaling of bars relative to frame
-        var yScale = d3.scaleLinear()
+        yScale = d3.scaleLinear()
           .range([chartHeight, 0])
-          .domain([0, 0.03]);
+          .domain([d3.min(csvData, function (d) {
+                return (parseFloat(d[expressed]));
+            }),
+            d3.max(csvData, function (d) {
+                return (parseFloat(d[expressed])) * 1.1;
+            })]);
 
 
 
         // Set bars for each state
-        var bars = chart.selectAll(".bars")
+        var bars = chart.selectAll(".bar")
           .data(csvData)
           .enter()
           .append("rect")
@@ -300,7 +314,7 @@
             return b[expressed]-a[expressed]
           })
           .attr("class", function(d){
-            return "bars " + d.name;
+            return "bar " + d.name;
           })
           // Size and position of rectangles based on index value
           // Width of n/1 would result in adjacent bars
@@ -344,6 +358,8 @@
             .attr("width", chartInnerWidth)
             .attr("height", chartInnerHeight + 10)
             .attr("transform", translate);
+
+        updateChart(bars, csvData.length, colorScale);
 
         // Append text to a block so the bars make sense to the user
         // var numbers = chart.selectAll(".numbers")
@@ -420,7 +436,50 @@
           return "#ccc";
         }
       });
+
+
+      //Make bars respond to attribute reexpress
+      var bars = d3.selectAll(".bar")
+          //Re-sort bars
+          .sort(function(a, b){
+              return b[expressed] - a[expressed];
+          });
+
+        updateChart(bars, csvData.length, colorScale);
   };
+
+    // Set position, size, and color of chart bars
+    function updateChart(bars, n, colorScale){
+      // Update yScale
+      yScale = d3.scaleLinear()
+        .range([chartHeight, 0])
+        .domain([d3.min(csvData, function (d) {
+              return (parseFloat(d[expressed]));
+          }),
+          d3.max(csvData, function (d) {
+              return (parseFloat(d[expressed])) * 1.1;
+          })]);
+
+      bars.attr("x", function(d, i){
+        return i * (chartInnerWidth / n) + leftPadding;
+      })
+      .attr("height", function(d, i){
+        return chartHeight - yScale(parseFloat(d[expressed]));
+      })
+      .attr("y", function(d, i){
+        return yScale(parseFloat(d[expressed])) + topBottomPadding;
+      })
+      // Color bars
+      .style("fill", function(d){
+        var value = d[expressed];
+        if(value) {
+          return colorScale(value);
+        } else {
+          return "#ccc";
+        }
+      });
+
+    };
 
 
 
