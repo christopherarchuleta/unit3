@@ -1,5 +1,21 @@
 // Javascript by Christopher Archuleta, 2020
 
+
+
+
+// ON USER SELECTION:
+// Step 1. Change the expressed attribute
+// Step 2. Recreate the color scale with new class breaks
+// Step 3. Recolor each enumeration unit on the map
+// Step 4. Re-sort each bar on the bar chart
+// Step 5. Resize each bar on the bar chart
+// Step 6. Recolor each bar on the bar chart
+
+
+
+
+
+
 // Self-executing anonymous function that holds
 // everything to avoid global variables
 (function(){
@@ -102,7 +118,7 @@
         setChart(csvData, colorScale);
 
         // Create dropdown menu
-        createDropdown();
+        createDropdown(csvData, setEnumerationUnits);
 
 
     };
@@ -356,11 +372,16 @@
         };
 
   //Enable reexpress with dropdown menu of attributes
-  function createDropdown(){
+  function createDropdown(csvData, map){
       //Append select element to DOM
       var dropdown = d3.select("body")
           .append("select")
-          .attr("class", "dropdown");
+          .attr("class", "dropdown")
+          // Event listener
+          .on("change", function(){
+            changeAttribute(this.value, csvData, map);
+            console.log("he");
+          });
 
       //Options are required for menu buttons
       // This option serves as affordance and cannot be selected(disabled)
@@ -376,6 +397,29 @@
           .append("option")
           .attr("value", function(d){ return d })
           .text(function(d){ return d });
+  };
+
+  // Change listener, which reacts to change in dropdown menu
+  function changeAttribute(attribute, csvData, map){
+    // Change the expressed attribute
+    expressed = attribute;
+
+    // Update color sclae to new attribute
+    var colorScale = makeColorScale(csvData);
+
+    // Recolor states
+    var mapStates = d3.selectAll(".mapStates")
+      .style("fill", function(d){
+
+        var value = d.properties[expressed];
+
+        // Add color only if there is a value
+        if(value) {
+          return colorScale(d.properties[expressed]);
+        } else {
+          return "#ccc";
+        }
+      });
   };
 
 
