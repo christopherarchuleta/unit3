@@ -101,6 +101,9 @@
         // Add coordinated visualization to map
         setChart(csvData, colorScale);
 
+        // Create dropdown menu
+        createDropdown();
+
 
     };
   };
@@ -360,12 +363,13 @@
           .attr("class", "dropdown");
 
       //Options are required for menu buttons
+      // This option serves as affordance and cannot be selected(disabled)
       var titleOption = dropdown.append("option")
           .attr("class", "titleOption")
           .attr("disabled", "true")
           .text("Select Attribute");
 
-      //add attribute name options
+      //Attribute name options based on the attributes in attrArray
       var attrOptions = dropdown.selectAll("attrOptions")
           .data(attrArray)
           .enter()
