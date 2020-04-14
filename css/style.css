@@ -48,7 +48,12 @@ h2 {
 
 }
 
-.chartTitle {
+.bars {
+  stroke: #222222;
+}
+
+.chartName {
+  fill: #000000;
   font-family: sans-serif;
   font-size: 1.5em;
   font-weight: bold;
@@ -76,7 +81,7 @@ h2 {
 .axis text {
     font-family: sans-serif;
     font-size: 0.8em;
-    fill: #999;
+    fill: #000000;
 }
 
 /* Style choropleth map */

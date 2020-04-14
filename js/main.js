@@ -196,12 +196,13 @@
       // Color scale generator function
       function makeColorScale(csvData){
         var colorClasses = [
-          "#d4b9da",
-          "#c994c7",
-          "df65b0",
-          "dd1c77",
-          "980043"
+          "#fef0d9",
+          "#fdcc8a",
+          "fc8d59",
+          "e34a33",
+          "b30000"
         ];
+        // Color scale courtesy of Color Brewer
 
         // Color scale generator
         // scaleThreshold stretches or compresses data
@@ -239,8 +240,8 @@
       function setChart(csvData, colorScale){
         var chartWidth = window.innerWidth * 0.425,
           chartHeight = 473,
-          leftPadding = 25,
-          rightPadding = 3,
+          leftPadding = 35,
+          rightPadding = 5,
           topBottomPadding = 5,
           chartInnerWidth = chartWidth - leftPadding - rightPadding,
           chartInnerHeight = chartHeight - topBottomPadding * 2,
@@ -251,7 +252,7 @@
         var chart = d3.select("body")
           .append("svg")
           .attr("width", chartWidth)
-          .attr("height", chartHeight)
+          .attr("height", chartHeight + 70)
           .attr("class", "chart");
 
         var chartBackground = chart.append("rect")
@@ -285,7 +286,7 @@
           // Size and position of rectangles based on index value
           // Width of n/1 would result in adjacent bars
           // n/1 - 1 allows for spaces between them
-          .attr("width", chartWidth / csvData.length - 1)
+          .attr("width", chartWidth / csvData.length - 2.25)
           .attr("x", function(d, i){
             return i * (chartInnerWidth / csvData.length) + leftPadding;
           })
@@ -301,10 +302,10 @@
 
 
 
-        var chartTitle = chart.append("text")
-          .attr("x", 40)
+        var chartName = chart.append("text")
+          .attr("x", 90)
           .attr("y", 40)
-          .attr("class", "chartTitle")
+          .attr("class", "chartName")
           .text("COVID-19 Cases (Pct. of State Pop.)");
 
 
@@ -322,33 +323,33 @@
         var chartFrame = chart.append("rect")
             .attr("class", "chartFrame")
             .attr("width", chartInnerWidth)
-            .attr("height", chartInnerHeight)
+            .attr("height", chartInnerHeight + 10)
             .attr("transform", translate);
 
         // Append text to a block so the bars make sense to the user
-        var numbers = chart.selectAll(".numbers")
-          .data(csvData)
-          .enter()
-          .append("text")
-          .sort(function(a, b){
-            return a[expressed]-b[expressed]
-          })
-          .attr("class", function(d){
-            return "numbers " + d.name;
-          })
-          .attr("text-anchor", "middle")
-          .attr("x", function (d, i){
-            var fraction = chartWidth / csvData.length;
-            return i * fraction + (fraction - 1) / 2;
-            console.log("Hello");
-          })
-          // Labels placed inside the bars
-          .attr("y", function(d){
-            return chartHeight - yScale(parseFloat(d[expressed])) + 15;
-          })
-          .text(function(d){
-            return d[expressed];
-          });
+        // var numbers = chart.selectAll(".numbers")
+        //   .data(csvData)
+        //   .enter()
+        //   .append("text")
+        //   .sort(function(a, b){
+        //     return a[expressed]-b[expressed]
+        //   })
+        //   .attr("class", function(d){
+        //     return "numbers " + d.name;
+        //   })
+        //   .attr("text-anchor", "middle")
+        //   .attr("x", function (d, i){
+        //     var fraction = chartWidth / csvData.length;
+        //     return i * fraction + (fraction - 1) / 2;
+        //     console.log("Hello");
+        //   })
+        //   // Labels placed inside the bars
+        //   .attr("y", function(d){
+        //     return chartHeight - yScale(parseFloat(d[expressed])) + 15;
+        //   })
+        //   .text(function(d){
+        //     return d[expressed];
+        //   });
         };
 
 
