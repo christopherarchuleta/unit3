@@ -86,7 +86,7 @@ h2 {
 /* Dynamic label */
 .infolabel {
     position: absolute;
-    height: 50px;
+    height: 30px;
     min-width: 100px;
     color: #fff;
     background-color: #000;
@@ -101,6 +101,8 @@ h2 {
     padding: 0;
     display: inline-block;
     line-height: 1em;
+    fill: #ffffff;
+    stroke: #ffffff;
 }
 
 option {

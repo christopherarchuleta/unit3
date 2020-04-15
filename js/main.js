@@ -1,27 +1,17 @@
 // Javascript by Christopher Archuleta, 2020
 
-
-
-
-// ON USER SELECTION:
-// Step 1. Change the expressed attribute
-// Step 2. Recreate the color scale with new class breaks
-// Step 3. Recolor each enumeration unit on the map
-// Step 4. Re-sort each bar on the bar chart
-// Step 5. Resize each bar on the bar chart
-// Step 6. Recolor each bar on the bar chart
-
-
-
-
-
+// Need to fix:
+// Chart title
+// Axis number
+// Dynamic label styling
+// Interface title, embellishment, ancilliary information, extra styling
 
 // Self-executing anonymous function that holds
 // everything to avoid global variables
 (function(){
   // Pseudo-global variables
   // var ss = {};
-  var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "Cases Per 1000 (Total Pop)"];
+  var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "COVID Cases Per 1000 (Total Pop)"];
   var expressed = attrArray[3];
   var colorScale;
 
@@ -69,7 +59,7 @@
         // Rotation of reference globe
         .rotate([97, -17, 0])
         .parallels([35.5, 41])
-        .scale(930)
+        .scale(850)
         // Translate the map to keep it centered in the svg
         .translate([width / 2, height / 2]);
 
@@ -168,7 +158,7 @@
 
       function joinData(statesGeoJson, csvData){
         // Variables for data join from csv
-        var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "Cases Per 1000 (Total Pop)"];
+        var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "COVID Cases Per 1000 (Total Pop)"];
 
 
         // Assign CSV attributes to GeoJSON with each loop
@@ -358,6 +348,7 @@
           .attr("x", 90)
           .attr("y", 40)
           .attr("class", "chartName")
+          .text("COVID Cases Per 1000 (Tot Pop)")
 
 
         var yAxis = d3.axisLeft()
@@ -486,6 +477,14 @@
               return (parseFloat(d[expressed])) * 1.1;
           })]);
 
+      yAxis = d3.axisLeft()
+        .scale(yScale);
+
+      // axis = chart.select("g")
+      //     .attr("class", "axis")
+      //     .attr("transform", translate)
+      //     .call(yAxis);
+
       bars.attr("x", function(d, i){
         return i * (chartInnerWidth / n) + leftPadding;
       })
@@ -504,10 +503,10 @@
           return "#ccc";
         }
       });
-      var chartTitle = d3.selectAll(".chartTitle")
-        .attr("x", 90)
-        .attr("y", 40)
-        .text("jkjk");
+      // var chartTitle = d3.selectAll(".chartTitle")
+      //   .attr("x", 90)
+      //   .attr("y", 40)
+      //   .text("jkjk");
 
     };
 
