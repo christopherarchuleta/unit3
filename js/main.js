@@ -21,7 +21,7 @@
 (function(){
   // Pseudo-global variables
   // var ss = {};
-  var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
+  var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "Cases Per 1000 (Total Pop)"];
   var expressed = attrArray[3];
   var colorScale;
 
@@ -168,8 +168,8 @@
 
       function joinData(statesGeoJson, csvData){
         // Variables for data join from csv
-        var attrArray = ["Voter Turnout (Pct Of Total Population)", "OID", "COVID Cases Mar24", "Cases (Pct of Total Pop)"];
-        // var expressed = attrArray[2];
+        var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "Cases Per 1000 (Total Pop)"];
+
 
         // Assign CSV attributes to GeoJSON with each loop
         for (var i=0; i<csvData.length; i++){
@@ -414,7 +414,6 @@
           // Event listener
           .on("change", function(){
             changeAttribute(this.value, csvData, map);
-            console.log("he");
           });
 
       //Options are required for menu buttons
@@ -500,7 +499,6 @@
       .style("fill", function(d){
         var value = d[expressed];
         if(value) {
-          console.log(attrArray);
           return colorScale(value);
         } else {
           return "#ccc";
