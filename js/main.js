@@ -232,7 +232,8 @@
           })
           .on("mouseout", function(d){
             dehighlight(d.properties);
-          });
+          })
+          .on("mousemove", moveLabel);
         // Style descriptor for SVG element allows entire style to be selected
         // See dehighlighting
         var desc = mapStates.append("desc")
@@ -345,7 +346,8 @@
             return colorScale(d[expressed]);
           })
           .on("mouseover", highlight)
-          .on("mouseout", dehighlight);
+          .on("mouseout", dehighlight)
+          .on("mousemove", moveLabel);
 
         var desc = bars.append("desc")
           .text('{"stroke": "none", "stroke-width": "0px"}');
@@ -517,6 +519,8 @@
         var selected = d3.selectAll("." + props.name)
             .style("stroke", "black")
             .style("stroke-width", "1");
+
+        setLabel(props);
     };
 
     // Dehighlight function
@@ -530,6 +534,9 @@
         .style("stroke-width", function(){
             return getStyle(this, "stroke-width")
         });
+    d3.select(".infolabel")
+        .remove();
+    };
 
     function getStyle(element, styleName){
         var styleText = d3.select(element)
@@ -541,7 +548,51 @@
 
         return styleObject[styleName];
     };
-};
+
+    //Dynamic label function
+    function setLabel(props){
+        //label content
+        var labelAttribute = "<h1>" + props[expressed] +
+            "</h1><b>" + expressed + "</b>";
+
+        // DOM element for dynamic labels
+        var infolabel = d3.select("body")
+            .append("div")
+            .attr("class", "infolabel")
+            .attr("id", props.name + "_label")
+            .html(labelAttribute);
+
+        var regionName = infolabel.append("div")
+            .attr("class", "labelname")
+            .html(props.label);
+    };
+
+    //Move label with mouse
+    function moveLabel(){
+      // Get width of label to avoid overflowing off map
+      var labelWidth = d3.select(".infolabel")
+        .node()
+        // Returns label size
+        .getBoundingClientRect()
+        .width;
+
+      // Displace label relative to pointer coordinates
+      var x1 = d3.event.clientX + 10,
+          y1 = d3.event.clientY - 75,
+          x2 = d3.event.clientX - labelWidth - 10,
+          y2 = d3.event.clientY + 25;
+
+      //Set up label coordinates and test for overflow
+      // x2 and y2 are backup coordinates
+      var x = d3.event.clientX > window.innerWidth - labelWidth - 20 ? x2 : x1;
+      var y = d3.event.clientY < 75 ? y2 : y1;
+
+      // D3 select allows the pointer location to be selected
+      d3.select(".infolabel")
+        .style("left", x + "px")
+        .style("top", y + "px");
+      };
+
 
 
 

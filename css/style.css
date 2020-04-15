@@ -83,6 +83,26 @@ h2 {
   box-shadow: 2px 2px 4px #999;
 }
 
+/* Dynamic label */
+.infolabel {
+    position: absolute;
+    height: 50px;
+    min-width: 100px;
+    color: #fff;
+    background-color: #000;
+    border: solid thin #fff;
+    padding: 5px 10px;
+    /* In the event of label added before position styles,
+    make label appear off page */
+    top: -75px;
+}
+.infolabel h1 {
+    margin: 0 20px 0 0;
+    padding: 0;
+    display: inline-block;
+    line-height: 1em;
+}
+
 option {
   font-weight: normal;
 }
