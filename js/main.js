@@ -485,6 +485,11 @@
           .attr("transform", translate)
           .call(yAxis);
 
+      chartName = d3.select(".chartName")
+        .attr("x", 90)
+        .attr("y", 40)
+        .text(expressed);
+
       bars.attr("x", function(d, i){
         return i * (chartInnerWidth / n) + leftPadding;
       })
@@ -503,10 +508,7 @@
           return "#ccc";
         }
       });
-      // var chartTitle = d3.selectAll(".chartTitle")
-      //   .attr("x", 90)
-      //   .attr("y", 40)
-      //   .text("jkjk");
+
 
     };
 
