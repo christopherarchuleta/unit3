@@ -59,7 +59,7 @@
         // Rotation of reference globe
         .rotate([97, -17, 0])
         .parallels([35.5, 41])
-        .scale(850)
+        .scale(700)
         // Translate the map to keep it centered in the svg
         .translate([width / 2, height / 2]);
 
@@ -466,7 +466,7 @@
   };
 
     // Set position, size, and color of chart bars
-    function updateChart(bars, n, colorScale){
+    function updateChart(bars, n, colorScale, chart){
       // Update yScale
       yScale = d3.scaleLinear()
         .range([chartHeight, 0])
@@ -480,10 +480,10 @@
       yAxis = d3.axisLeft()
         .scale(yScale);
 
-      // axis = chart.select("g")
-      //     .attr("class", "axis")
-      //     .attr("transform", translate)
-      //     .call(yAxis);
+      axis = d3.select(".axis")
+          .attr("class", "axis")
+          .attr("transform", translate)
+          .call(yAxis);
 
       bars.attr("x", function(d, i){
         return i * (chartInnerWidth / n) + leftPadding;
