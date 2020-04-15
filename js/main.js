@@ -225,7 +225,19 @@
             } else {
             	return "#ccc";
             }
+          })
+          // Highlighting for feedback and linking views in interface
+          .on("mouseover", function(d){
+            highlight(d.properties);
+          })
+          .on("mouseout", function(d){
+            dehighlight(d.properties);
           });
+        // Style descriptor for SVG element allows entire style to be selected
+        // See dehighlighting
+        var desc = mapStates.append("desc")
+          // Text below is JSON
+          .text('{"stroke": "#636363", "stroke-width": "0.5"}');
 
       };
 
@@ -331,7 +343,12 @@
           })
           .style("fill", function(d){
             return colorScale(d[expressed]);
-          });
+          })
+          .on("mouseover", highlight)
+          .on("mouseout", dehighlight);
+
+        var desc = bars.append("desc")
+          .text('{"stroke": "none", "stroke-width": "0px"}');
 
 
 
@@ -493,6 +510,38 @@
         .text("jkjk");
 
     };
+
+    //Highlight function
+    function highlight(props){
+        //Change stroke
+        var selected = d3.selectAll("." + props.name)
+            .style("stroke", "black")
+            .style("stroke-width", "1");
+    };
+
+    // Dehighlight function
+    // Style reset on mouseout
+    function dehighlight(props){
+    var selected = d3.selectAll("." + props.name)
+      // Each style spec (ex: stroke) determined by style descriptor of selection
+        .style("stroke", function(){
+            return getStyle(this, "stroke")
+        })
+        .style("stroke-width", function(){
+            return getStyle(this, "stroke-width")
+        });
+
+    function getStyle(element, styleName){
+        var styleText = d3.select(element)
+            .select("desc")
+            .text();
+
+        // Use JSON syntax to get different style elements like stroke
+        var styleObject = JSON.parse(styleText);
+
+        return styleObject[styleName];
+    };
+};
 
 
 

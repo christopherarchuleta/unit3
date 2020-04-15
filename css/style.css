@@ -49,7 +49,6 @@ h2 {
 }
 
 .bars {
-  stroke: #222222;
 }
 
 .chartName {
@@ -110,7 +109,7 @@ option {
 }
 
 .mapStates {
-  fill: #cccccc;
+  /* fill: #cccccc; */
   stroke: #636363;
   stroke-width: 0.5px;
 }
