@@ -339,7 +339,6 @@
           .attr("x", 90)
           .attr("y", 40)
           .attr("class", "chartName")
-          .text("COVID-19 Cases (Pct. of State Pop.)");
 
 
         var yAxis = d3.axisLeft()
@@ -425,6 +424,9 @@
 
     // Recolor states
     var mapStates = d3.selectAll(".mapStates")
+      // Add transition of 1000 milliseconds for improved feedback
+      .transition()
+      .duration(1000)
       .style("fill", function(d){
 
         var value = d.properties[expressed];
@@ -443,7 +445,13 @@
           //Re-sort bars
           .sort(function(a, b){
               return b[expressed] - a[expressed];
-          });
+          })
+          .transition()
+          // Delay for bars relative to each other so they move at different times
+          .delay(function(d, i){
+            return i * 20
+          })
+          .duration(500);
 
         updateChart(bars, csvData.length, colorScale);
   };
@@ -473,11 +481,16 @@
       .style("fill", function(d){
         var value = d[expressed];
         if(value) {
+          console.log(attrArray);
           return colorScale(value);
         } else {
           return "#ccc";
         }
       });
+      var chartTitle = d3.selectAll(".chartTitle")
+        .attr("x", 90)
+        .attr("y", 40)
+        .text("jkjk");
 
     };
 
