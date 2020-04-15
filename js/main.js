@@ -2,7 +2,7 @@
 
 // Need to fix:
 // Chart title
-// Axis number
+//Highlighting
 // Dynamic label styling
 // Interface title, embellishment, ancilliary information, extra styling
 
