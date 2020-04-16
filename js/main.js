@@ -11,7 +11,7 @@
 (function(){
   // Pseudo-global variables
   // var ss = {};
-  var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "COVID Cases Per 1000 (Total Pop)"];
+  var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "COVID Cases Per 1000 (Total Pop)", "Mortality Rate (Per 100K)"];
   var expressed = attrArray[3];
   var colorScale;
 
@@ -158,7 +158,7 @@
 
       function joinData(statesGeoJson, csvData){
         // Variables for data join from csv
-        var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "COVID Cases Per 1000 (Total Pop)"];
+        var attrArray = ["Voter Turnout (Pct Registered Voters)", "Voter Turnout (Pct Adult Pop)", "Voter Turnout (Pct Eligible Voters)", "COVID Cases Per 1000 (Total Pop)", "Mortality Rate (Per 100K)"];
 
 
         // Assign CSV attributes to GeoJSON with each loop
