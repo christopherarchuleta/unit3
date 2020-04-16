@@ -289,7 +289,7 @@
         var chartBackground = chart.append("rect")
           .attr("class", "chartBackground")
           .attr("width", chartInnerWidth)
-          .attr("height", chartInnerHeight)
+          .attr("height", chartInnerHeight + 2 * topBottomPadding)
           .attr("transform", translate);
 
 
@@ -365,7 +365,7 @@
         var chartFrame = chart.append("rect")
             .attr("class", "chartFrame")
             .attr("width", chartInnerWidth)
-            .attr("height", chartInnerHeight + 10)
+            .attr("height", chartInnerHeight + 2 * topBottomPadding)
             .attr("transform", translate);
 
         updateChart(bars, csvData.length, colorScale);
@@ -470,9 +470,7 @@
       // Update yScale
       yScale = d3.scaleLinear()
         .range([chartHeight, 0])
-        .domain([d3.min(csvData, function (d) {
-              return (parseFloat(d[expressed]));
-          }),
+        .domain([0,
           d3.max(csvData, function (d) {
               return (parseFloat(d[expressed])) * 1.1;
           })]);
