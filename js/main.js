@@ -29,6 +29,7 @@
   var yScale;
 
 
+  // setTitle();
 
   // Begin script when data loads
   window.onload = setMap();
@@ -128,9 +129,18 @@
         createDropdown(csvData, setEnumerationUnits);
 
 
+
     };
   };
 
+
+      // function setTitle(){
+      //   var interfaceTitle = d3.select("body")
+      //       .append("text")
+      //       .attr("position", top)
+      //       .text("COVID 19(4/14/20) & 2020 Primary Election Map");
+      //
+      // };
 
       function setGraticule(map, path){
             // Graticule generator
@@ -370,30 +380,6 @@
 
         updateChart(bars, csvData.length, colorScale);
 
-        // Append text to a block so the bars make sense to the user
-        // var numbers = chart.selectAll(".numbers")
-        //   .data(csvData)
-        //   .enter()
-        //   .append("text")
-        //   .sort(function(a, b){
-        //     return a[expressed]-b[expressed]
-        //   })
-        //   .attr("class", function(d){
-        //     return "numbers " + d.name;
-        //   })
-        //   .attr("text-anchor", "middle")
-        //   .attr("x", function (d, i){
-        //     var fraction = chartWidth / csvData.length;
-        //     return i * fraction + (fraction - 1) / 2;
-        //     console.log("Hello");
-        //   })
-        //   // Labels placed inside the bars
-        //   .attr("y", function(d){
-        //     return chartHeight - yScale(parseFloat(d[expressed])) + 15;
-        //   })
-        //   .text(function(d){
-        //     return d[expressed];
-        //   });
         };
 
   //Enable reexpress with dropdown menu of attributes
@@ -549,8 +535,8 @@
     //Dynamic label function
     function setLabel(props){
         //label content
-        var labelAttribute = "<h1>" + props[expressed] +
-            "</h1><b>" + expressed + "</b>";
+        var labelAttribute = "<h1>" + props.name + ": " + props[expressed] +
+            "</h1><b>" + expressed + "</b>" ;
 
         // DOM element for dynamic labels
         var infolabel = d3.select("body")

@@ -7,10 +7,10 @@ body {
 /*Title*/
 h1 {
   text-align: center;
-  font-size: 24px;
+  font-size: 20px;
   font-family: "Palatino Linotype","Book Antiqua",Palatino,serif;
-  color: #fff7bc;
-  text-shadow: 1px 1px 2px gray;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px #b30000;
 }
 
 /*Subtitle*/
@@ -40,7 +40,7 @@ h2 {
 }
 
 .chart {
-  background-color: #666666;
+  background-color: #aaaaaa;
   border: medium double #222222;
   float: right;
   margin: 10px 20px 0 0;
@@ -118,15 +118,15 @@ option {
 .axis path,
 .axis line {
     fill: none;
-    stroke: #999;
+    stroke: #ffffff;
     stroke-width: 1px;
     shape-rendering: crispEdges;
 }
 
 .axis text {
     font-family: sans-serif;
-    font-size: 0.8em;
-    fill: #000000;
+    font-size: 1.2em;
+    fill: #ffffff;
 }
 
 /* Style choropleth map */
@@ -175,10 +175,6 @@ independently of the data (static)*/
   shape-rendering: crispEdges;
 }
 
-.axis text {
-  font-family: sans-serif;
-  font-size: 0.9em;
-}
 
 .title {
   font-family: sans-serif;
@@ -248,7 +244,7 @@ independently of the data (static)*/
 }
 
 /*This is where the temporal and attribute legend are located*/
-.legend-control-container {
+/* .legend-control-container {
   width: 180px;
   height: 140px;
   background-color: rgba(251,255,254,0.9);
@@ -257,15 +253,15 @@ independently of the data (static)*/
   font-weight: bold;
   text-align: center;
   border: solid gray 1px;
-}
+} */
 
-
+/*
 #temporal-legend {
-  width: 160px;
+  width: 160px; */
   /*To make the text aligned*/
-  padding-left: 10px;
-}
-
+  /* padding-left: 10px;
+} */
+/*
 .range-slider {
   width: 200px;
 }
@@ -280,7 +276,7 @@ independently of the data (static)*/
   width: 100%;
   height: auto;
   background-color: white;
-}
+} */
 
 /*Specify increment movements*/
 #forward {
